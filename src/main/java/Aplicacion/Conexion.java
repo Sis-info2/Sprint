@@ -14,8 +14,8 @@ public class Conexion {
         try {
             Class.forName("org.postgresql.Driver");
             
-            String myBD = "jdbc:postgresql://localhost:5432/lista_comparacion";
-            con = DriverManager.getConnection(myBD, "postgres", "1234567890");
+            String myBD = "jdbc:postgresql://dpg-coal268l6cac73emur1g-a.oregon-postgres.render.com/sisinfo2";
+            con = DriverManager.getConnection(myBD, "sisinfo2_user", "MjJfeyXg5JB1hbCf0vYs14Gmw8MVjo3N");
             //JOptionPane.showMessageDialog(null, "Se conectó correctamente a la BD");
             return con;
             
