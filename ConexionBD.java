@@ -2,33 +2,35 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package sisinfo2;
+package com.mycompany.sisinfo2a;
+
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+
 /**
  *
- * @author hp
+ * @author Fernanda
  */
 public class ConexionBD {
-    Connection conectar =null;
-    String usuario="sisinfo2_user";
-    String contrasenia ="MjJfeyXg5JB1hbCf0vYs14Gmw8MVjo3N";
-    String bd="sisinfo2";
-    String puerto ="5432";
-    
-    String cadena = "jdbc:postgresql://dpg-coal268l6cac73emur1g-a.oregon-postgres.render.com/sisinfo2";
-    
-    public Connection conexionEstablecida() throws SQLException{
-      try{
-          Class.forName("org.postgresql.Driver");
-          conectar =DriverManager.getConnection(cadena,usuario,contrasenia);
-          JOptionPane.showMessageDialog(null, "Se conecto a la base de datos");
-      }catch(HeadlessException | ClassNotFoundException | SQLException e){
-        JOptionPane.showMessageDialog(null, "No se conecto a la base de datos,error:"+ e.toString());
-      }
-      return conectar;
+    private String usuario = "sisinfo2_user";
+    private String contrasenia = "MjJfeyXg5JB1hbCf0vYs14Gmw8MVjo3N";
+    private String bd = "sisinfo2";
+    private String puerto = "5432";
+    private String cadena = "jdbc:postgresql://dpg-coal268l6cac73emur1g-a.oregon-postgres.render.com/sisinfo2";
+
+    public Connection conexionEstablecida() {
+        Connection conectar = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            conectar = DriverManager.getConnection(cadena, usuario, contrasenia);
+            JOptionPane.showMessageDialog(null, "Se conectó a la base de datos");
+        } catch (HeadlessException | ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(null, "No se conectó a la base de datos,error:" + e.toString());
+        }
+        return conectar;
     }
+    
 }
