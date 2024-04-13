@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package sisinfo2;
 
 import javax.swing.*;
@@ -15,29 +12,22 @@ import javax.swing.JOptionPane;
 public class anunciosClase extends JFrame {
     
     public anunciosClase() {
-        // Configuración básica de la ventana
         setTitle("Anuncios");
-        // Ajustar el tamaño de la ventana
         setSize(600, 400);
-        // Centrar la ventana en la pantalla
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        // Crear un panel para agregar componentes
+
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Establecer un diseño vertical
-        
-        // Crear un panel de desplazamiento
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); 
+
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
-        // Agregar el panel de desplazamiento a la ventana
         add(scrollPane);
         
-        // Obtener los anuncios de la base de datos y agregarlos al panel
         obtenerAnuncios(panel);
         
-        // Hacer visible la ventana
+  
         setVisible(true);
     }
     
@@ -52,11 +42,11 @@ public class anunciosClase extends JFrame {
                 while (rs.next()) {
                     String anuncio = rs.getString("anuncios");
                     JTextArea textArea = new JTextArea(anuncio);
-                    textArea.setEditable(false); // Para que el usuario no pueda editar el texto
-                    textArea.setLineWrap(true); // Envolver el texto si es necesario
-                    textArea.setWrapStyleWord(true); // Envolver palabras enteras
+                    textArea.setEditable(false);
+                    textArea.setLineWrap(true); 
+                    textArea.setWrapStyleWord(true); 
                     panel.add(textArea);
-                    panel.add(Box.createRigidArea(new Dimension(0, 10))); // Agregar espacio entre anuncios
+                    panel.add(Box.createRigidArea(new Dimension(0, 10))); 
                 }
                 conn.close();
             }
@@ -66,7 +56,7 @@ public class anunciosClase extends JFrame {
     }
 
     public static void main(String[] args) {
-        // Crear una instancia de la ventana de anuncios
+     
         SwingUtilities.invokeLater(() -> new anunciosClase());
     }
 }
