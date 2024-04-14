@@ -5,7 +5,7 @@ import java.sql.Connection;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Statement;
 import java.sql.ResultSet;
-//import java.sql.PreparedStatement;
+import java.sql.PreparedStatement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -16,50 +16,66 @@ public class Lista_estudiantes extends javax.swing.JFrame {
     private DefaultTableModel modelo = new DefaultTableModel();
     private Statement ejecutor = null;
 
-    private void conectar() throws ClassNotFoundException {
-        conexion = new Conexion();
-        Connection con = null;
-        con = conexion.getConnection();
-    }
+    private String golesBase = "";
+    private String puestoActual = "1";
+    private double comparacionActual = 1;
+    private boolean bandera = true;
 
-    protected void cargarTablaEstudiantes(String materia) {
+    protected void cargar_lista(String materia) {
+
         modelo.setRowCount(0);
         String datos[] = new String[5];
-        String query = "SELECT row_number() OVER (ORDER BY apellido_paterno DESC) as n°, nombres, apellido_paterno, apellido_materno, email "
-                     + "FROM materia M, inscripcion I, alumno A, usuario U "
-                     + "WHERE materia = " + materia + " " 
+        String query = "SELECT row_number() OVER (ORDER BY apellido_paterno DESC) as puesto, apellido_paterno,"
+                     + "apellido_materno, nombres, email"
+                     + "FROM materia,inscripcion,alumno,usuario "             
+                     + "WHERE materia.id_materia = inscripcion.id_materia AND alumno.id_alumno = inscripcion.id_alumno"
+                     + " AND usuario.id_usuario = alumno.id_usuario AND materia =" + materia + " "
                      + "ORDER BY apellido_paterno DESC";
+
         ResultSet rs;
         try {
             ejecutor = conexion.getConnection().createStatement();
             ejecutor.setQueryTimeout(20);
             rs = ejecutor.executeQuery(query);
             while (rs.next() == true) {
-                
                 datos[0] = rs.getString("n°");
-                datos[1] = rs.getString("nombres");
-                datos[2] = rs.getString("apellido_paterno");
-                datos[3] = rs.getString("apellido_materno");
-                datos[4] = rs.getString("email");
+                datos[1] = rs.getString("Apellido Paterno");
+                datos[2] = rs.getString("Apellido Materno");
+                datos[3] = rs.getString("Nombres");
+                datos[4] = rs.getString("Email");
 
                 modelo.addRow(datos);
             }
-            tablaAlumnos.setModel(modelo);
+            tablaEquipos.setModel(modelo);
+
         } catch (Exception e) {
+
         }
+
     }
-    
-    public Lista_estudiantes(String materia) throws ClassNotFoundException {
+
+    private void conectar() throws ClassNotFoundException {
+        conexion = new Conexion();
+        Connection con = null;
+        con = conexion.getConnection();
+    }
+
+
+    public Lista_estudiantes(){
         initComponents();
 
-        modelo.addColumn("N°");
-        modelo.addColumn("Nombre");
-        modelo.addColumn("A.Paterno");
-        modelo.addColumn("A.Materno");
+        modelo.addColumn("n°");
+        modelo.addColumn("Apellido Paterno");
+        modelo.addColumn("Apellido Materno");
+        modelo.addColumn("Nombres");
         modelo.addColumn("Email");
 
-        conectar();
-        cargarTablaEstudiantes(materia);
+        try {
+            conectar();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Lista_estudiantes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cargar_lista("");
     }
 
     /**
@@ -70,43 +86,35 @@ public class Lista_estudiantes extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaAlumnos = new javax.swing.JTable();
+        tablaEquipos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tablaAlumnos.setModel(new javax.swing.table.DefaultTableModel(
+        tablaEquipos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "N°", "NOMBRES", "APELLIDOS", "EMAIL"
+                "N°", "APELLIDO_PATERNO", "APELLIDO_MATERNO", "NOMBRES", "EMAIL"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tablaAlumnos);
+        ));
+        jScrollPane1.setViewportView(tablaEquipos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 653, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addGap(114, 114, 114)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(162, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         pack();
@@ -129,31 +137,26 @@ public class Lista_estudiantes extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Lista_estudiantes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Formulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Lista_estudiantes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Formulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Lista_estudiantes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Formulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Lista_estudiantes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Formulario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new Lista_estudiantes("").setVisible(true);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Lista_estudiantes.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new Lista_estudiantes().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaAlumnos;
+    private javax.swing.JTable tablaEquipos;
     // End of variables declaration//GEN-END:variables
 }
